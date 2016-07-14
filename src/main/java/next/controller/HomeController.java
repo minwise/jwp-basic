@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import core.db.DataBase;
 
-@WebServlet("")
+//@WebServlet("")
 public class HomeController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     

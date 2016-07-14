@@ -10,6 +10,8 @@
 	<logger name="core" level="DEBUG" />
 	
 	<logger name="next" level="DEBUG" />
+	
+	<logger name="minho" level="DEBUG" />
 
 	<root level="INFO">
 		<appender-ref ref="STDOUT" />
