@@ -10,20 +10,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import core.mvc.Controller;
 import core.mvc.View;
 import next.dao.AnswerDao;
-import next.model.Result;
+import next.model.Answer;
 
-public class DeleteAnswerController implements Controller {
+public class AnswerAddController implements Controller {
+
 	@Override
 	public View execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-		Long answerId = Long.parseLong(req.getParameter("answerId"));
+		Answer answer = new Answer(req.getParameter("writer"), req.getParameter("contents"),
+				Long.parseLong(req.getParameter("questionId")));
 		AnswerDao answerDao = new AnswerDao();
-		
-		answerDao.delete(answerId);
-		
+		Answer savedAnswer = answerDao.insert(answer);
 		ObjectMapper mapper = new ObjectMapper();
 		resp.setContentType("application/json;charset=UTF-8");
 		PrintWriter out = resp.getWriter();
-		out.print(mapper.writeValueAsString(Result.ok()));
+		out.print(mapper.writeValueAsString(savedAnswer));
+		
 		return null;
 	}
+
 }

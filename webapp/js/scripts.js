@@ -17,6 +17,7 @@ function addAnswer(e) {
 }
 
 function onSuccess(json, status){
+  console.log(json.savedAnswer);
   var answerTemplate = $("#answerTemplate").html();
   var template = answerTemplate.format(json.writer, new Date(json.createdDate), json.contents, json.answerId, json.answerId);
   $(".qna-comment-slipp-articles").prepend(template);
