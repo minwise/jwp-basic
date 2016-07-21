@@ -17,8 +17,10 @@ function addAnswer(e) {
 }
 
 function onSuccess(json, status){
+  var answer = json.answer;
+  console.log(answer);
   var answerTemplate = $("#answerTemplate").html();
-  var template = answerTemplate.format(json.writer, new Date(json.createdDate), json.contents, json.answerId, json.answerId);
+  var template = answerTemplate.format(answer.writer, new Date(answer.createdDate), answer.contents, answer.answerId, answer.answerId);
   $(".qna-comment-slipp-articles").prepend(template);
 }
 
@@ -43,7 +45,8 @@ function deleteAnswer(e) {
       alert("error");
     },
     success: function (json, status) {
-      if (json.status) {
+      var result = json.result;
+      if (result.status) {
         deleteBtn.closest('article').remove();
       }
     }
