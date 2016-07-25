@@ -15,7 +15,7 @@ import next.model.Question;
 public class AddQuestionController extends AbstractController {
 	private static final Logger log = LoggerFactory.getLogger(AddQuestionController.class);
 	
-	private QuestionDao questionDao = QuestionDao.getInstance();
+	private QuestionDao questionDao = new QuestionDao();
 
 	@Override
 	public ModelAndView execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {

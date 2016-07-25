@@ -15,14 +15,8 @@ import core.jdbc.RowMapper;
 import next.model.Question;
 
 public class QuestionDao {
-	private static QuestionDao instance = new QuestionDao();
-	
-	public static QuestionDao getInstance() {
-		return instance;
-	}
-	
 	public Question insert(Question question) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
         String sql = "INSERT INTO QUESTIONS (writer, title, contents, createdDate, countOfAnswer) VALUES (?, ?, ?, ?, ?)";
         PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
@@ -43,9 +37,9 @@ public class QuestionDao {
     }
 	
 	public void updateCountOfAnswer(Long questionId) {
-		Question question = findById(questionId);
-		JdbcTemplate jdbcTemplate = new JdbcTemplate();
+		JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
 		String sql = "UPDATE QUESTIONS SET countOfAnswer=? WHERE questionId=?";
+		Question question = findById(questionId);
 		
 		PreparedStatementSetter pss = new PreparedStatementSetter() {
 			@Override
@@ -58,8 +52,14 @@ public class QuestionDao {
 		jdbcTemplate.update(sql, pss);
 	}
 	
+	public void delete(Long questionId) {
+		JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
+        String sql = "DELETE FROM QUESTIONS WHERE questionId = ?";
+        jdbcTemplate.update(sql, questionId);
+	}
+	
 	public List<Question> findAll() {
-		JdbcTemplate jdbcTemplate = new JdbcTemplate();
+		JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
 		String sql = "SELECT questionId, writer, title, createdDate, countOfAnswer FROM QUESTIONS "
 				+ "order by questionId desc";
 		
@@ -78,7 +78,7 @@ public class QuestionDao {
 	}
 
 	public Question findById(long questionId) {
-		JdbcTemplate jdbcTemplate = new JdbcTemplate();
+		JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
 		String sql = "SELECT questionId, writer, title, contents, createdDate, countOfAnswer FROM QUESTIONS "
 				+ "WHERE questionId = ?";
 		

@@ -17,7 +17,7 @@ import next.model.User;
 public class UpdateAnswerController extends AbstractController {
 	private static final Logger log = LoggerFactory.getLogger(UpdateAnswerController.class);
 	
-	AnswerDao answerDao = AnswerDao.getInstance();
+	AnswerDao answerDao = new AnswerDao();
 
 	@Override
 	public ModelAndView execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
@@ -27,12 +27,9 @@ public class UpdateAnswerController extends AbstractController {
 		}
 		HttpSession session = req.getSession();
 		User user = (User)session.getAttribute("user");
-		log.debug("user : {}", user);
 		Answer answer = answerDao.findById(Long.parseLong(req.getParameter("answerId")));
-		log.debug("Answer : {}", answer);
 		if (user.getName().equals(answer.getWriter())) {
-			log.debug("writer is correct");
-			return jspView("/qna/update.jsp");
+			return jspView("/qna/update.jsp").addObject("answer", answer);
 		}
 		
 		return jspView("redirect:/");

@@ -14,15 +14,8 @@ import core.jdbc.RowMapper;
 import next.model.Answer;
 
 public class AnswerDao {
-	
-	private static AnswerDao instance = new AnswerDao();
-	
-	public static AnswerDao getInstance() {
-		return instance;
-	}
-	
     public Answer insert(Answer answer) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
         String sql = "INSERT INTO ANSWERS (writer, contents, createdDate, questionId) VALUES (?, ?, ?, ?)";
         PreparedStatementCreator psc = new PreparedStatementCreator() {
 			@Override
@@ -44,8 +37,29 @@ public class AnswerDao {
         return findById(keyHolder.getId());
     }
     
+    public Answer update(Answer answer, String contents) {
+    	JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
+    	String sql = "UPDATE ANSWERS SET contents = ? WHERE answerId = ?";
+    	
+    	PreparedStatementCreator psc = new PreparedStatementCreator() {
+			
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+				PreparedStatement pstmt = con.prepareStatement(sql);
+				pstmt.setString(1, contents);
+				pstmt.setLong(2, answer.getAnswerId());
+				return pstmt;
+			}
+		}; 
+		
+		KeyHolder keyHolder = new KeyHolder();
+		jdbcTemplate.update(psc, keyHolder);
+    	
+    	return findById(keyHolder.getId());
+    }
+    
     public Answer findById(long answerId) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
         String sql = "SELECT answerId, writer, contents, createdDate, questionId FROM ANSWERS WHERE answerId = ?";
 
         RowMapper<Answer> rm = new RowMapper<Answer>() {
@@ -60,7 +74,7 @@ public class AnswerDao {
     }
 
     public List<Answer> findAllByQuestionId(long questionId) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
         String sql = "SELECT answerId, writer, contents, createdDate FROM ANSWERS WHERE questionId = ? "
                 + "order by answerId desc";
 
@@ -76,7 +90,7 @@ public class AnswerDao {
     }
 
 	public void delete(Long answerId) {
-		JdbcTemplate jdbcTemplate = new JdbcTemplate();
+		JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
         String sql = "DELETE FROM ANSWERS WHERE answerId = ?";
         jdbcTemplate.update(sql, answerId);
 	}
